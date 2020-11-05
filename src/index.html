@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html style="background: black;" >
     <head>
-        <title>Multi-User Video Call</title>
+        <title>Abc Crop</title>
 
         <meta content="width=device-width, initial-scale=1" name="viewport" />
 
@@ -22,15 +22,6 @@
     <body>
         <div class="custom-modal" id='recording-options-modal'>
             <div class="custom-modal-content">
-                <div class="row text-center">
-                    <div class="col-md-6 mb-2">
-                        <span class="record-option" id='record-video'>Record video</span>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <span class="record-option" id='record-screen'>Record screen</span>
-                    </div>
-                </div>
-
                 <div class="row mt-3">
                     <div class="col-md-12 text-center">
                         <button class="btn btn-outline-danger" id='closeModal'>Close</button>
@@ -41,7 +32,7 @@
         
         
         <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
-            <div class="text-white">Video Call</div>
+            <div class="text-white"></div>
 
             <div class="pull-right room-comm" hidden>
                 <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
@@ -54,10 +45,6 @@
 
                 <button class="btn btn-sm rounded-0 btn-no-effect" id='share-screen' title="Share screen">
                     <i class="fa fa-desktop text-white"></i>
-                </button>
-
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='record' title="Record">
-                    <i class="fa fa-dot-circle text-white"></i>
                 </button>
 
                 <button class="btn btn-sm text-white pull-right btn-no-effect" id='toggle-chat-pane'>
