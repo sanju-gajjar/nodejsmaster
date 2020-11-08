@@ -72,7 +72,12 @@ window.addEventListener( 'load', () => {
 
             //empty the values
             document.querySelector( '#room-name' ).value = '';
-            document.querySelector( '#your-name' ).value = '';
+            document.querySelector('#your-name').value = '';
+            setTimeout(() => {
+            
+                document.getElementById('toggle-video').click();
+                document.getElementById('toggle-mute').click();
+            }, 5000);
         }
 
         else {
@@ -84,6 +89,13 @@ window.addEventListener( 'load', () => {
     //When the 'Enter room' button is clicked.
     document.getElementById( 'enter-room' ).addEventListener( 'click', ( e ) => {
         e.preventDefault();
+       
+        
+        setTimeout(() => {
+           
+            document.getElementById('toggle-video').click();
+            document.getElementById('toggle-mute').click();
+        }, 5000);
 
         let name = document.querySelector( '#username' ).value;
 
@@ -92,7 +104,7 @@ window.addEventListener( 'load', () => {
             document.querySelector( '#err-msg-username' ).innerHTML = "";
 
             //save the user's name in sessionStorage
-            sessionStorage.setItem( 'username', name );
+            sessionStorage.setItem('username', name);
 
             //reload room
             location.reload();

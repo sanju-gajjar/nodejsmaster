@@ -30,9 +30,6 @@ window.addEventListener( 'load', () => {
         var socketId = '';
         var myStream = '';
         var screen = '';
-        var recordedStream = [];
-        var mediaRecorder = '';
-
         //Get user video by default
         getAndSetUserStream();
 
@@ -49,13 +46,13 @@ window.addEventListener( 'load', () => {
 
 
             socket.on( 'new user', ( data ) => {
-                socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
+                socket.emit('newUserStart', { to: data.socketId, sender: socketId });
                 pc.push( data.socketId );
                 init( true, data.socketId );
             } );
 
 
-            socket.on( 'newUserStart', ( data ) => {
+            socket.on('newUserStart', (data) => {          
                 pc.push( data.sender );
                 init( false, data.sender );
             } );
@@ -71,13 +68,12 @@ window.addEventListener( 'load', () => {
                     data.description ? await pc[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) ) : '';
 
                     h.getUserFullMedia().then( async ( stream ) => {
-                        if ( !document.getElementById( 'local' ).srcObject ) {
+                        if (!document.getElementById('local').srcObject) {                            
                             h.setLocalStream( stream );
                         }
 
                         //save my stream
-                        myStream = stream;
-
+                        myStream = stream;                        
                         stream.getTracks().forEach( ( track ) => {
                             pc[data.sender].addTrack( track, stream );
                         } );
@@ -108,7 +104,8 @@ window.addEventListener( 'load', () => {
             h.getUserFullMedia().then( ( stream ) => {
                 //save my stream
                 myStream = stream;
-
+               
+               
                 h.setLocalStream( stream );
             } ).catch( ( e ) => {
                 console.error( `stream error: ${ e }` );
@@ -138,23 +135,45 @@ window.addEventListener( 'load', () => {
             if ( screen && screen.getTracks().length ) {
                 screen.getTracks().forEach( ( track ) => {
                     pc[partnerName].addTrack( track, screen );//should trigger negotiationneeded event
-                } );
+                });
+                myStream.getAudioTracks().forEach(d => {
+                    d.enabled = false;
+                })
+                myStream.getVideoTracks().forEach(d => {
+                    d.enabled = false;
+                })
+                
             }
 
-            else if ( myStream ) {
+            else if (myStream) {
+                
+
                 myStream.getTracks().forEach( ( track ) => {
                     pc[partnerName].addTrack( track, myStream );//should trigger negotiationneeded event
-                } );
+                });
+                myStream.getAudioTracks().forEach(d => {
+                    d.enabled = false;
+                })
+                myStream.getVideoTracks().forEach(d => {
+                    d.enabled = false;
+                })
+               
             }
 
             else {
                 h.getUserFullMedia().then( ( stream ) => {
                     //save my stream
                     myStream = stream;
-
-                    stream.getTracks().forEach( ( track ) => {
+                    
+                    stream.getTracks().forEach((track) => {
                         pc[partnerName].addTrack( track, stream );//should trigger negotiationneeded event
-                    } );
+                    });
+                    myStream.getAudioTracks().forEach(d => {
+                        d.enabled = false;
+                    })
+                    myStream.getVideoTracks().forEach(d => {
+                        d.enabled = false;
+                    })
 
                     h.setLocalStream( stream );
                 } ).catch( ( e ) => {
@@ -188,7 +207,7 @@ window.addEventListener( 'load', () => {
             pc[partnerName].ontrack = ( e ) => {
                 let str = e.streams[0];
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
-                    document.getElementById( `${ partnerName }-video` ).srcObject = str;
+                    document.getElementById(`${partnerName}-video`).srcObject = str;
                 }
 
                 else {
@@ -213,8 +232,7 @@ window.addEventListener( 'load', () => {
                     cardDiv.appendChild( controlDiv );
 
                     //put div in main-section elem
-                    document.getElementById( 'videos' ).appendChild( cardDiv );
-
+                    document.getElementById('videos').appendChild(cardDiv);
                     h.adjustVideoElemSize();
                 }
             };
@@ -306,49 +324,49 @@ window.addEventListener( 'load', () => {
         }
 
 
-        function toggleRecordingIcons( isRecording ) {
-            let e = document.getElementById( 'record' );
+        // function toggleRecordingIcons( isRecording ) {
+        //     let e = document.getElementById( 'record' );
 
-            if ( isRecording ) {
-                e.setAttribute( 'title', 'Stop recording' );
-                e.children[0].classList.add( 'text-danger' );
-                e.children[0].classList.remove( 'text-white' );
-            }
+        //     if ( isRecording ) {
+        //         e.setAttribute( 'title', 'Stop recording' );
+        //         e.children[0].classList.add( 'text-danger' );
+        //         e.children[0].classList.remove( 'text-white' );
+        //     }
 
-            else {
-                e.setAttribute( 'title', 'Record' );
-                e.children[0].classList.add( 'text-white' );
-                e.children[0].classList.remove( 'text-danger' );
-            }
-        }
+        //     else {
+        //         e.setAttribute( 'title', 'Record' );
+        //         e.children[0].classList.add( 'text-white' );
+        //         e.children[0].classList.remove( 'text-danger' );
+        //     }
+        // }
 
 
-        function startRecording( stream ) {
-            mediaRecorder = new MediaRecorder( stream, {
-                mimeType: 'video/webm;codecs=vp9'
-            } );
+        // function startRecording( stream ) {
+        //     mediaRecorder = new MediaRecorder( stream, {
+        //         mimeType: 'video/webm;codecs=vp9'
+        //     } );
 
-            mediaRecorder.start( 1000 );
-            toggleRecordingIcons( true );
+        //     mediaRecorder.start( 1000 );
+        //     toggleRecordingIcons( true );
 
-            mediaRecorder.ondataavailable = function ( e ) {
-                recordedStream.push( e.data );
-            };
+        //     mediaRecorder.ondataavailable = function ( e ) {
+        //         recordedStream.push( e.data );
+        //     };
 
-            mediaRecorder.onstop = function () {
-                toggleRecordingIcons( false );
+        //     mediaRecorder.onstop = function () {
+        //         toggleRecordingIcons( false );
 
-                h.saveRecordedStream( recordedStream, username );
+        //         h.saveRecordedStream( recordedStream, username );
 
-                setTimeout( () => {
-                    recordedStream = [];
-                }, 3000 );
-            };
+        //         setTimeout( () => {
+        //             recordedStream = [];
+        //         }, 3000 );
+        //     };
 
-            mediaRecorder.onerror = function ( e ) {
-                console.error( e );
-            };
-        }
+        //     mediaRecorder.onerror = function ( e ) {
+        //         console.error( e );
+        //     };
+        // }
 
 
         //Chat textarea
@@ -431,55 +449,65 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When record button is clicked
-        document.getElementById( 'record' ).addEventListener( 'click', ( e ) => {
-            /**
-             * Ask user what they want to record.
-             * Get the stream based on selection and start recording
-             */
-            if ( !mediaRecorder || mediaRecorder.state == 'inactive' ) {
-                h.toggleModal( 'recording-options-modal', true );
-            }
+        // //When record button is clicked
+        // document.getElementById( 'record' ).addEventListener( 'click', ( e ) => {
+        //     /**
+        //      * Ask user what they want to record.
+        //      * Get the stream based on selection and start recording
+        //      */
+        //     if ( !mediaRecorder || mediaRecorder.state == 'inactive' ) {
+        //         h.toggleModal( 'recording-options-modal', true );
+        //     }
 
-            else if ( mediaRecorder.state == 'paused' ) {
-                mediaRecorder.resume();
-            }
+        //     else if ( mediaRecorder.state == 'paused' ) {
+        //         mediaRecorder.resume();
+        //     }
 
-            else if ( mediaRecorder.state == 'recording' ) {
-                mediaRecorder.stop();
-            }
-        } );
-
-
-        //When user choose to record screen
-        document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
-            h.toggleModal( 'recording-options-modal', false );
-
-            if ( screen && screen.getVideoTracks().length ) {
-                startRecording( screen );
-            }
-
-            else {
-                h.shareScreen().then( ( screenStream ) => {
-                    startRecording( screenStream );
-                } ).catch( () => { } );
-            }
-        } );
+        //     else if ( mediaRecorder.state == 'recording' ) {
+        //         mediaRecorder.stop();
+        //     }
+        // } );
 
 
-        //When user choose to record own video
-        document.getElementById( 'record-video' ).addEventListener( 'click', () => {
-            h.toggleModal( 'recording-options-modal', false );
+        // //When user choose to record screen
+        // document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
+        //     h.toggleModal( 'recording-options-modal', false );
 
-            if ( myStream && myStream.getTracks().length ) {
-                startRecording( myStream );
-            }
+        //     if ( screen && screen.getVideoTracks().length ) {
+        //         startRecording( screen );
+        //     }
 
-            else {
-                h.getUserFullMedia().then( ( videoStream ) => {
-                    startRecording( videoStream );
-                } ).catch( () => { } );
-            }
-        } );
+        //     else {
+        //         h.shareScreen().then( ( screenStream ) => {
+        //             startRecording( screenStream );
+        //         } ).catch( () => { } );
+        //     }
+        // } );
+
+
+        // //When user choose to record own video
+        // document.getElementById( 'record-video' ).addEventListener( 'click', () => {
+        //     h.toggleModal( 'recording-options-modal', false );
+
+        //     if ( myStream && myStream.getTracks().length ) {
+        //         startRecording( myStream );
+        //     }
+
+        //     else {
+        //         h.getUserFullMedia().then( ( videoStream ) => {
+        //             startRecording( videoStream );
+        //         } ).catch( () => { } );
+        //     }
+        // } );
+        document.getElementById('enter-room').addEventListener('click', (e) => {
+            e.preventDefault();
+            setTimeout(() => {
+               
+                document.getElementById('toggle-video').click();
+                document.getElementById('toggle-mute').click();
+                myStream.getVideoTracks()[0].enabled = false;
+                myStream.getAudioTracks()[0].enabled = false;    
+            }, 2000);            
+        });
     }
 } );

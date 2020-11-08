@@ -232,13 +232,13 @@ export default {
     },
 
 
-    saveRecordedStream( stream, user ) {
-        let blob = new Blob( stream, { type: 'video/webm' } );
+    // saveRecordedStream( stream, user ) {
+    //     let blob = new Blob( stream, { type: 'video/webm' } );
 
-        let file = new File( [blob], `${ user }-${ moment().unix() }-record.webm` );
+    //     let file = new File( [blob], `${ user }-${ moment().unix() }-record.webm` );
 
-        saveAs( file );
-    },
+    //     saveAs( file );
+    // },
 
 
     toggleModal( id, show ) {
