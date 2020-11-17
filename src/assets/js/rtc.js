@@ -445,8 +445,11 @@ window.addEventListener( 'load', () => {
             }            
             broadcastNewTracks( myStream, 'video' );
         });
-        document.getElementById('toggle-camera').addEventListener('click', (e) => {
-            playVideoFromCamera()
+        document.getElementById('toggle-camera-back').addEventListener('click', (e) => {
+            playVideoFromCamera('back')
+        });
+        document.getElementById('toggle-camera-front').addEventListener('click', (e) => {
+            playVideoFromCamera('front')
         });
         async function openCamera(cameraId) {
             let constraints = {
@@ -458,15 +461,13 @@ window.addEventListener( 'load', () => {
 
             return await navigator.mediaDevices.getUserMedia(constraints);
         }
-        async function playVideoFromCamera() {
+        async function playVideoFromCamera(type) {
             try {
                 const cameras = await getConnectedDevices('videoinput');
                 console.log(cameras)
                 if (cameras && cameras.length > 0) {
-                    console.log(cameras)
-                    alert(JSON.stringify(cameras))  
                     // Open first available video camera with a resolution of 1280x720 pixels
-                    const stream = openCamera(cameras[cameras.length>0 ? Math.round(Math.random()):0].deviceId);
+                    const stream = openCamera(cameras.filter(x => x.label.endsWith(type))[0].deviceId);
                     const constraints = { 'video': true, 'audio': true };
                     const streams = await navigator.mediaDevices.getUserMedia(constraints);
                     const videoElement = document.querySelector('video#local');
