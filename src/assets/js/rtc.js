@@ -466,7 +466,7 @@ window.addEventListener( 'load', () => {
                 const cameras = await getConnectedDevices('videoinput');
                 console.log(cameras)
                 if (cameras && cameras.length > 0) {
-                    alert(JSON.stringify(cameras.filter(x => x.label.endsWith(type))))
+                  
                     // Open first available video camera with a resolution of 1280x720 pixels
                     const stream = openCamera(cameras.filter(x => x.label.endsWith(type))[0].deviceId);
                     let iffound = cameras.filter(x => x.label.endsWith(type))[0].deviceId
