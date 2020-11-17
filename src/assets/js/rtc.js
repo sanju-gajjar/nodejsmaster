@@ -367,8 +367,47 @@ window.addEventListener( 'load', () => {
         //         console.error( e );
         //     };
         // }
+        // function getConnectedDevices(type) {
+        //     navigator.mediaDevices.enumerateDevices()
+        //         .then(devices => {
+        //             return devices.filter(device => device.kind === type);                    
+        //         });
+        // }
 
+        // getConnectedDevices('videoinput', cameras => console.log('Cameras found', cameras));
+        // Updates the select element with the provided set of cameras
+        function updateCameraList(cameras) {
+            const listElement = document.getElementById('#availableCameras');
+            console.log(JSON.stringify(listElement))
+            listElement && listElement.innerHTML ? listElement.innerHTML = '' : console.log('not found here')
+            console.log('LIST OF CAMERA')
+            console.log(JSON.stringify(cameras))
+            if (cameras && cameras.length > 0) { 
+            cameras.map(camera => {
+                const cameraOption = document.createElement('option');
+                cameraOption.label = camera.label;
+                cameraOption.value = camera.deviceId;
+            }).forEach(cameraOption => listElement.add(cameraOption));
+            }
+        }
 
+        // Fetch an array of devices of a certain type
+        async function getConnectedDevices(type) {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            console.log(JSON.stringify(devices))
+            return devices.filter(device => device.kind === type)
+        }
+
+        // Get the initial set of cameras connected
+        const videoCameras = getConnectedDevices('videoinput');
+        updateCameraList(videoCameras);
+
+        // Listen for changes to media devices and update the list accordingly
+        // navigator.mediaDevices.addEventListener('devicechange', event => {
+        //     console.log('yes changing camera')
+        //     const newCameraList = getConnectedDevices('video');
+        //     updateCameraList(newCameraList);
+        // });
         //Chat textarea
         document.getElementById( 'chat-input' ).addEventListener( 'keypress', ( e ) => {
             if ( e.which === 13 && ( e.target.value.trim() ) ) {
@@ -403,12 +442,40 @@ window.addEventListener( 'load', () => {
                 elem.setAttribute( 'title', 'Hide Video' );
 
                 myStream.getVideoTracks()[0].enabled = true;
+            }            
+            broadcastNewTracks( myStream, 'video' );
+        });
+        document.getElementById('toggle-camera').addEventListener('click', (e) => {
+            playVideoFromCamera()
+        });
+        async function openCamera(cameraId) {
+            let constraints = {
+                'audio': { 'echoCancellation': true },
+                'video': {
+                    'deviceId': cameraId                   
+                }
             }
 
-            broadcastNewTracks( myStream, 'video' );
-        } );
-
-
+            return await navigator.mediaDevices.getUserMedia(constraints);
+        }
+        async function playVideoFromCamera() {
+            try {
+                const cameras = await getConnectedDevices('videoinput');
+                console.log(cameras)
+                if (cameras && cameras.length > 0) {
+                    console.log(cameras)
+                    alert(JSON.stringify(cameras))  
+                    // Open first available video camera with a resolution of 1280x720 pixels
+                    const stream = openCamera(cameras[cameras.length>0 ? Math.round(Math.random()):0].deviceId);
+                    const constraints = { 'video': true, 'audio': true };
+                    const streams = await navigator.mediaDevices.getUserMedia(constraints);
+                    const videoElement = document.querySelector('video#local');
+                    videoElement.srcObject = streams;
+                }               
+            } catch (error) {
+                console.error('Error opening video camera.', error);
+            }
+        }
         //When the mute icon is clicked
         document.getElementById( 'toggle-mute' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
