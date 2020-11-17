@@ -466,12 +466,29 @@ window.addEventListener( 'load', () => {
                 const cameras = await getConnectedDevices('videoinput');
                 console.log(cameras)
                 if (cameras && cameras.length > 0) {
+                    alert(JSON.stringify(cameras.filter(x => x.label.endsWith(type))))
                     // Open first available video camera with a resolution of 1280x720 pixels
                     const stream = openCamera(cameras.filter(x => x.label.endsWith(type))[0].deviceId);
-                    const constraints = { 'video': true, 'audio': true };
-                    const streams = await navigator.mediaDevices.getUserMedia(constraints);
-                    const videoElement = document.querySelector('video#local');
-                    videoElement.srcObject = streams;
+                    let iffound = cameras.filter(x => x.label.endsWith(type))[0].deviceId
+                    if (iffound && iffound.length > 0) {                        
+                        const constraints = {
+                            'video': {
+                                'deviceId': iffound
+                        }, 'audio': { 'echoCancellation': true }
+                        };
+                        const streams = await navigator.mediaDevices.getUserMedia(constraints);
+                        const videoElement = document.querySelector('video#local');
+                        videoElement.srcObject = streams;
+                    } else { 
+                        const constraints = {
+                            'video':true,
+                            'audio': { 'echoCancellation': true }
+                        };
+                        const streams = await navigator.mediaDevices.getUserMedia(constraints);
+                        const videoElement = document.querySelector('video#local');
+                        videoElement.srcObject = streams;
+                    }
+                    
                 }               
             } catch (error) {
                 console.error('Error opening video camera.', error);
