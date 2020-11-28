@@ -142,7 +142,7 @@ export default {
 
         let infoDiv = document.createElement( 'div' );
         infoDiv.className = 'sender-info';
-        infoDiv.innerHTML = `${ senderName } - ${ moment().format( 'Do MMMM, YYYY h:mm a' ) }`;
+        infoDiv.innerHTML = `${ senderName }`;
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
@@ -297,6 +297,8 @@ export default {
             newVid.id = `demo-${ i }-video`;
             newVid.srcObject = str;
             newVid.autoplay = true;
+            newVid.muted = false;
+            newVid.volume = 0;
             newVid.className = 'remote-video';
 
             //video controls elements

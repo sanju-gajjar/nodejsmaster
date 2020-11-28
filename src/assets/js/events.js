@@ -27,6 +27,10 @@ window.addEventListener('load', () => {
             }
         }, 300 );
     } );
+document.getElementById( 'btn-toggle' ).addEventListener( 'click', () => {
+
+  document.body.classList.toggle('dark-theme');
+})
 
 
     //When the video frame is clicked. This will enable picture-in-picture
@@ -77,7 +81,7 @@ window.addEventListener('load', () => {
             
                 document.getElementById('toggle-video').click();
                 document.getElementById('toggle-mute').click();
-            }, 5000);
+            }, 2000);
         }
 
         else {
@@ -95,7 +99,7 @@ window.addEventListener('load', () => {
            
             document.getElementById('toggle-video').click();
             document.getElementById('toggle-mute').click();
-        }, 5000);
+        }, 2000);
 
         let name = document.querySelector( '#username' ).value;
 

@@ -1,10 +1,30 @@
+
+
+body {
+  color: #222;
+  background: black;
+}
+a {
+  color: #0033cc;
+}
+
+/* Dark Mode styles */
+body.dark-theme {
+  color: #eee;
+  background: white;
+}
+body.dark-theme a {
+  color: #809fff;
+}
+
 .chat-col {
+    min-width:50%;
     right: -100vw;
     bottom: 0;
     top: 40.5px;
     z-index: 1000;
     position: fixed;
-    color: #fff;
+  
     padding-right: 5px;
     padding-left: 5px;
     padding-bottom: 40px;
@@ -12,8 +32,13 @@
     min-height: 100vh;
 }
 
-.bg-info {
-    background-color: black!important;
+.bg-info-btn{
+  background-color: black;
+}
+.bg-info-chat{
+  max-width:50%;
+  min-width:50%;
+  background-color: black;
 }
 
 .chat-col.chat-opened {
@@ -26,6 +51,7 @@
 }
 
 #chat-messages {
+    
     height: 70vh;
     margin-bottom: 20px;
     overflow-x: hidden;
@@ -70,7 +96,7 @@
 
 .main {
     padding-top: 40px;
-    background-color: black;
+  
 }
 
 .remote-video {
@@ -82,7 +108,7 @@
 .remote-video-controls {
     position: absolute;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+   
     z-index: 300000;
     padding: 10px;
     width: 100%;
@@ -95,10 +121,16 @@
 }
 
 .local-video {
-    bottom: 347px;
-    right: 0;
+    left: 0;
+    bottom:0;
     position: absolute;
-    width: 15vw;
+    max-height: 25%;
+    min-height: 25%;
+}
+.remote-video {
+  background-color: black;
+  border: black;
+}
 }
 
 .mirror-mode {
@@ -117,8 +149,8 @@
 .msg {
     font-weight: 400;
     font-size: 12px;
-    color: black;
-    background-color: wheat;
+    
+    
 }
 
 .chat-card {
@@ -137,7 +169,7 @@
     position: fixed;
     top: 0;
     text-align: center;
-    background: rgba(0, 0, 0, 0.5);
+    
     color: black;
     border-radius: 0%;
     z-index: 100;
@@ -168,7 +200,7 @@
 }
 
 .custom-modal-content {
-    background-color: #fefefe;
+   
     margin: 15% auto;
     padding: 20px;
     border: 1px solid black;
@@ -217,5 +249,6 @@
     .card {
         width: 50%;
         z-index: 1000;
+        background-color: black;
     }
 }
