@@ -88,11 +88,14 @@ export default {
 
 
     shareScreen() {
+      alert("i am clicked")
+      try {
+        /* code */
+      
         if ( this.userMediaAvailable() ) {
+          alert("reached here")
             return navigator.mediaDevices.getDisplayMedia( {
-                video: {
-                    cursor: "always"
-                },
+                video: true,
                 audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
@@ -102,8 +105,12 @@ export default {
         }
 
         else {
+            alert("something wrong")
             throw new Error( 'User media not available' );
         }
+} catch (e) {
+  alert(e)
+}
     },
 
 

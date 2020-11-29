@@ -32,10 +32,10 @@ document.getElementById( 'btn-toggle' ).addEventListener( 'click', () => {
   document.body.classList.toggle('dark-theme');
 })
 
-// switch camera 
-let videoElm = document.querySelector('#local');
+// camera stream video element
+let videoElm = document.getElementById('local');
 // flip button element
-let flipBtn = document.querySelector('#flip-btn');
+let flipBtn = document.getElementById('flip-btn');
 
 // default user media options
 let defaultsOpts = { audio: false, video: true }
@@ -61,6 +61,20 @@ function capture() {
       console.log(err)
     });
 }
+
+flipBtn.addEventListener('click', function(){
+  if( stream == null ) return
+  // we need to flip, stop everything
+  stream.getTracks().forEach(t => {
+    t.stop();
+  });
+  // toggle / flip
+  shouldFaceUser = !shouldFaceUser;
+  capture();
+})
+
+capture();
+
     //When the video frame is clicked. This will enable picture-in-picture
     document.getElementById( 'local' ).addEventListener( 'click', () => {
         if ( !document.pictureInPictureElement ) {
@@ -124,10 +138,9 @@ function capture() {
        
         
         setTimeout(() => {
-           
-            document.getElementById('toggle-video').click();
-            document.getElementById('toggle-mute').click();
-        }, 2000);
+          document.getElementById('toggle-video').click();
+          document.getElementById('toggle-mute').click();
+        }, 4000);
 
         let name = document.querySelector( '#username' ).value;
 
