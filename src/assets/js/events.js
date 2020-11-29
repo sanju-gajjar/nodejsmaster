@@ -32,7 +32,35 @@ document.getElementById( 'btn-toggle' ).addEventListener( 'click', () => {
   document.body.classList.toggle('dark-theme');
 })
 
+// switch camera 
+let videoElm = document.querySelector('#local');
+// flip button element
+let flipBtn = document.querySelector('#flip-btn');
 
+// default user media options
+let defaultsOpts = { audio: false, video: true }
+let shouldFaceUser = true;
+
+// check whether we can use facingMode
+let supports = navigator.mediaDevices.getSupportedConstraints();
+if( supports['facingMode'] === true ) {
+  flipBtn.disabled = false;
+}
+
+let stream = null;
+
+function capture() {
+  defaultsOpts.video = { facingMode: shouldFaceUser ? 'user' : 'environment' }
+  navigator.mediaDevices.getUserMedia(defaultsOpts)
+    .then(function(_stream) {
+      stream  = _stream;
+      videoElm.srcObject = stream;
+      videoElm.play();
+    })
+    .catch(function(err) {
+      console.log(err)
+    });
+}
     //When the video frame is clicked. This will enable picture-in-picture
     document.getElementById( 'local' ).addEventListener( 'click', () => {
         if ( !document.pictureInPictureElement ) {
